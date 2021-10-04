@@ -11,6 +11,7 @@
   "profiles": {
     "HappyQuotes.WebAPI": {
       "commandName": "Project",
+      "commandLineArgs": "GoogleCustomSearch:ApiKey=test",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {

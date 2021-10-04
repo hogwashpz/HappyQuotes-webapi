@@ -7,6 +7,8 @@ namespace HappyQuotes.WebAPI.Infrastructure.Options
 {
     public class SwaggerOptions
     {
+        public const string Swagger = "Swagger";
+
         public string JsonRoute { get; set; }
 
         public string Description { get; set; }

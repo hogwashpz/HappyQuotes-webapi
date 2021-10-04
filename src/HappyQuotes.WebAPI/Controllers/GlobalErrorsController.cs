@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using HappyQuotes.Application.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HappyQuotes.WebAPI.Controllers
 {
@@ -25,7 +23,8 @@ namespace HappyQuotes.WebAPI.Controllers
 
             var responseStatusCode = contextException.Error switch
             {
-                ArgumentException => StatusCodes.Status400BadRequest,
+                TimeoutException => StatusCodes.Status408RequestTimeout,
+                NoResultException => StatusCodes.Status500InternalServerError,
                 _ => StatusCodes.Status503ServiceUnavailable
             };
 

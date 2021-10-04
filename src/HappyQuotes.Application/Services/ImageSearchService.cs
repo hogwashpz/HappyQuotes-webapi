@@ -1,54 +1,53 @@
-using Google.Apis.CustomSearchAPI.v1;
-using Google.Apis.Services;
-using HappyQuotes.Application.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using HappyQuotes.Application.Models;
+using Google.Apis.CustomSearchAPI.v1.Data;
+using HappyQuotes.Application.Exceptions;
 
 namespace HappyQuotes.Application.Services
 {
     public class ImageSearchService : IImageSearchService
     {
-        public async Task<List<ImageLinkModel>> HappyQoutesSearchAsync(string queryTerms = "happy quotes")
+        private readonly HappyQuotesImagesQuery _query; 
+        private readonly ILogger<ImageSearchService> _logger;
+        private readonly Random _randomNum;
+
+        public ImageSearchService(HappyQuotesImagesQuery query, ILogger<ImageSearchService> logger)
         {
-            const string apiKey = "AIzaSyBwnPErO63g8qxJHaMLOp8wmoN0ILBd9JQ";
-            const string searchEngineId = "7441b6d4e6ddd40e6";
+            _query = query;
+            _logger = logger;
+            _randomNum = new Random();
+        }
 
-            //throw new ArgumentException($"{nameof(ArgumentException)} : {queryTerms}");
+        public async Task<ImageLinkModel> HappyQoutesSearchAsync()
+        {
+            (bool lockTimeouted, List<Result> results) = await _query.TryExecuteAsync();
+            _logger.LogInformation($"First fetch of happy qoutes image count: {results.Count}");
 
-            var customSearchService = new CustomSearchAPIService(new BaseClientService.Initializer { ApiKey = apiKey });
-            var listRequest = customSearchService.Cse.List();
-            listRequest.Cx = searchEngineId;
-            listRequest.ExactTerms = queryTerms;
-            listRequest.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
-
-            //List<Result> paging = new List<Result>();
-            List<ImageLinkModel> dataModel = new List<ImageLinkModel>();
-            var count = 0;
-            while (dataModel != null)
+            if (lockTimeouted)
             {
-                Console.WriteLine($"Page {count}");
-                listRequest.Start = count;
-
-                var result = await listRequest.ExecuteAsync();
-
-                dataModel.AddRange(result.Items.Select(r => new ImageLinkModel
-                {
-                    Content = r.Snippet,
-                    Link = r.Link,
-                    Title = r.Title,
-                    Name = r.HtmlTitle
-                }));
-
-                count++;
-                if (count >= 1)
-                {
-                    break;
-                }
+                _logger.LogInformation("Async lock timedout!");
+                // add retries, with some maximum tries 
+                throw new TimeoutException("Fetching 100 images somehow timeouted, this will be change to recuring and cache hit");
             }
-            return dataModel;
+
+            if (results.Count == 0)
+                throw new NoResultException("Zero images returned");
+
+#if DEBUG
+            _logger.LogDebug(string.Join(Environment.NewLine, results.Select(r => r.Link)));
+#endif
+
+            var item = results[_randomNum.Next(results.Count)];
+
+            return new ImageLinkModel
+            {
+                Link = item.Link,
+                Title = item.Title
+            };
         }
     }
 }

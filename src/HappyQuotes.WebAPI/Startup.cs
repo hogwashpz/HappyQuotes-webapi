@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HappyQuotes.Application;
+using HappyQuotes.Application.Options;
 using HappyQuotes.WebAPI.Infrastructure.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,8 +28,11 @@ namespace HappyQuotes.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Application
             services.AddApplication();
+            services.Configure<GoogleCustomSearchOptions>(Configuration.GetSection(GoogleCustomSearchOptions.GoogleCustomSearch));
 
+            // WebAPI
             services.AddControllers();
             services.Configure<RouteOptions>(options =>
             {
@@ -43,15 +47,15 @@ namespace HappyQuotes.WebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-
-            app.UseExceptionHandler("/errors");
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+                app.UseExceptionHandler("/errors");
 
             var swaggerOptions = new SwaggerOptions();
-            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            Configuration.GetSection(SwaggerOptions.Swagger).Bind(swaggerOptions);
             app.UseSwagger(opt => opt.RouteTemplate = swaggerOptions.JsonRoute);
             app.UseSwaggerUI(opt => opt.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description));
 

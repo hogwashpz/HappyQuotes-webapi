@@ -12,7 +12,7 @@ namespace HappyQuotes.Application
     {
         public static void AddApplication(this IServiceCollection services)
         {
-            //services.AddHttpClient();
+            services.AddSingleton<HappyQuotesImagesQuery>();
             services.AddScoped<IImageSearchService, ImageSearchService>();
         }
     }

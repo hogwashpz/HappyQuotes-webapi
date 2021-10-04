@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>f84f2f40-34c6-48bf-bc5e-380792832da9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,5 @@
   <ItemGroup>
     <ProjectReference Include="..\HappyQuotes.Application\HappyQuotes.Application.csproj" />
   </ItemGroup>
-
 
 </Project>

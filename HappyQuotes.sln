@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyQuotes.WebAPI", "src\H
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{045A3946-B2FA-44F2-A581-DC2317235FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyQuotes.Application", "src\HappyQuotes.Application\HappyQuotes.Application.csproj", "{D0EC6512-DDAC-444F-8DCE-38C1338EC1F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HappyQuotes.Application", "src\HappyQuotes.Application\HappyQuotes.Application.csproj", "{D0EC6512-DDAC-444F-8DCE-38C1338EC1F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{86273D6F-D7EB-4F26-854C-CD3CCB5E46C7}"
+	ProjectSection(SolutionItems) = preProject
+		BuildAndRun.bat = BuildAndRun.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
