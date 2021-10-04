@@ -24,29 +24,26 @@ namespace HappyQuotes.Application.Services
 
         public async Task<ImageLinkModel> HappyQoutesSearchAsync()
         {
-            (bool lockTimeouted, List<Result> results) = await _query.TryExecuteAsync();
-            _logger.LogInformation($"First fetch of happy qoutes image count: {results.Count}");
+            (bool lockTimeouted, List<Result>? results) = await _query.TryExecuteAsync();
+
+            _logger.LogInformation("First fetch of happy qoutes image count: {results?.Count}", results?.Count);
 
             if (lockTimeouted)
             {
-                _logger.LogInformation("Async lock timedout!");
+                _logger.LogCritical("Slim async lock timedout!");
                 // add retries, with some maximum tries 
-                throw new TimeoutException("Fetching 100 images somehow timeouted, this will be change to recuring and cache hit");
+                throw new TimeoutException("Fetching 100 images somehow timeouted, this will be change to recuring call and cache hit.");
             }
 
-            if (results.Count == 0)
-                throw new NoResultException("Zero images returned");
+            if (results is null || results?.Count == 0)
+                throw new NoResultException("No images returned.");
 
-#if DEBUG
-            _logger.LogDebug(string.Join(Environment.NewLine, results.Select(r => r.Link)));
-#endif
-
-            var item = results[_randomNum.Next(results.Count)];
+            var item = results![_randomNum.Next(results.Count)];
 
             return new ImageLinkModel
             {
-                Link = item.Link,
-                Title = item.Title
+                Link = item.Link ?? string.Empty,
+                Title = item.Title ?? string.Empty
             };
         }
     }

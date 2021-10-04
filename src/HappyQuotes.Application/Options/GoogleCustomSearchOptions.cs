@@ -4,7 +4,7 @@
     {
         public const string GoogleCustomSearch = "GoogleCustomSearch";
 
-        public string ApiKey { get; set; }
-        public string SearchEngineID { get; set; }
+        public string? ApiKey { get; set; }
+        public string? SearchEngineID { get; set; }
     }
 }

@@ -12,5 +12,5 @@
   <ItemGroup>
     <ProjectReference Include="..\HappyQuotes.Application\HappyQuotes.Application.csproj" />
   </ItemGroup>
-
+  
 </Project>

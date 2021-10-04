@@ -1,8 +1,8 @@
-﻿using HappyQuotes.Application.Exceptions;
+﻿using System;
+using HappyQuotes.Application.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace HappyQuotes.WebAPI.Controllers
 {
@@ -25,6 +25,7 @@ namespace HappyQuotes.WebAPI.Controllers
             {
                 TimeoutException => StatusCodes.Status408RequestTimeout,
                 NoResultException => StatusCodes.Status500InternalServerError,
+                ArgumentException => StatusCodes.Status500InternalServerError,
                 _ => StatusCodes.Status503ServiceUnavailable
             };
 

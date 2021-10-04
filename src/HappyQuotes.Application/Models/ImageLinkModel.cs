@@ -8,7 +8,7 @@ namespace HappyQuotes.Application.Models
 {
     public class ImageLinkModel
     {
-        public string Link { get; set; }
-        public string Title { get; set; }
+        public string? Link { get; set; }
+        public string? Title { get; set; }
     }
 }
