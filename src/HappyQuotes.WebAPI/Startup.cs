@@ -33,10 +33,8 @@ namespace HappyQuotes.WebAPI
 
             // WebAPI
             services.AddControllers();
-            services.Configure<RouteOptions>(options =>
-            {
-                options.LowercaseUrls = true;
-            });
+            services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+            services.AddCors();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "HappyQuotes.WebAPI", Version = "v1" });
@@ -61,6 +59,16 @@ namespace HappyQuotes.WebAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            if (env.IsDevelopment() || env.EnvironmentName.Equals("Test"))
+            {
+                app.UseCors(configure =>
+                    configure.AllowAnyOrigin()
+                             .AllowAnyHeader()
+                             .AllowAnyMethod()
+                    );
+                // User diffrent CORS for Production
+            }
 
             app.UseEndpoints(endpoints =>
             {
