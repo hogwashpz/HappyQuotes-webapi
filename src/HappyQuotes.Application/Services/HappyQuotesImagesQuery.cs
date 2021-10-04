@@ -32,6 +32,7 @@ namespace HappyQuotes.Application.Services
             searchRequest = customSearchService.Cse.List();
             searchRequest.Cx = configs.Value.SearchEngineID;
             searchRequest.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
+            searchRequest.Num = 10;
             searchRequest.ExactTerms = queryTerms;
         }
 
@@ -46,16 +47,18 @@ namespace HappyQuotes.Application.Services
                 {
                     var searchResults = new List<Result>(100);
 
-                    var count = 0;
+                    var count = 1;
+                    searchRequest.Start = count;
                     do
                     {
+                        var result = await searchRequest.ExecuteAsync();
+                        if (result.Items is not null)
+                            searchResults.AddRange(result.Items);
+
+                        count += 10;
                         searchRequest.Start = count;
 
-                        var result = await searchRequest.ExecuteAsync();  // TODO: check if each page is different
-                        searchResults.AddRange(result.Items);
-
-                        count++;
-                    } while (count < 10);
+                    } while (count < 11); // TODO: Temporary take just 10 results
 
                     return (false, searchResults);
                 }
